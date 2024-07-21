@@ -17,6 +17,7 @@ class PdipluginTrace(CMakePackage):
     maintainers = ['jbigot']
 
     version('develop', branch='master', no_cache=True)
+    version('1.7.1',   sha256='d67e3a498bfe4491c4e9aeb40015b32481a7902b122f087dcebf05451a3d9ce1')
     version('1.6.0',   sha256='ae45d388c98c5e33d552d5e3216c1f92bf97d5dd01c669107084c1f3202fcd5a')
     version('1.5.5',   sha256='11bf5db61f23107dfd2135e637e9233524855c78104c57288c6af21d02d1ea53')
     version('1.5.4',   sha256='0af1fe9fb85066772a921efdf1f3bb554559066a62eaebce4c9c6afd3b2a5c38')
@@ -43,6 +44,7 @@ class PdipluginTrace(CMakePackage):
     depends_on('cmake@3.10:', type=('build'), when='@1.5.0:')
     depends_on('cmake@3.5:',  type=('build'), when='@:1.4.3')
     depends_on('pdi@develop', type=('link', 'run'), when='@develop')
+    depends_on('pdi@1.7.1',   type=('link', 'run'), when='@1.7.1')
     depends_on('pdi@1.6.0',   type=('link', 'run'), when='@1.6.0')
     depends_on('pdi@1.5.5',   type=('link', 'run'), when='@1.5.5')
     depends_on('pdi@1.5.4',   type=('link', 'run'), when='@1.5.4')
