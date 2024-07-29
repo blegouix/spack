@@ -15,13 +15,13 @@ LEVEL="${LEVEL:-all}"
 echo "  ** You can set the following environment variables:"
 echo "VERSION(oldest|latest)=${VERSION}"
 echo "COMPILER(gcc|clang)=${COMPILER}"
-echo "MPI(openmpi)=${MPI}"
+echo "MPI(openmpi|mpich)=${MPI}"
 echo "LEVEL(mini|all)=${LEVEL}"
-DASH_LEVEL="-${LEVEL}"
-DASH_LEVEL="${DASH_LEVEL/-mini/}"
+
+set -ex
 
 docker run --rm \
     -v "${PWD}:/opt/spack-pdi:ro" \
     --entrypoint spack-env \
-    "ghcr.io/pdidev/test_env/builder:${VERSION}-${COMPILER}-${MPI}${DASH_LEVEL}" \
+    "ghcr.io/pdidev/fullspack/${VERSION}/${COMPILER}/${MPI}/${LEVEL}" \
     "/opt/spack-pdi/tests/spack_install_pdi"
