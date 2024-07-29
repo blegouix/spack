@@ -23,5 +23,5 @@ set -ex
 docker run --rm \
     -v "${PWD}:/opt/spack-pdi:ro" \
     --entrypoint spack-env \
-    "ghcr.io/pdidev/fullspack/${VERSION}/${COMPILER}/${MPI}/${LEVEL}" \
+    "ghcr.io/pdidev/fullspack/${VERSION}/${COMPILER}/${MPI}/${LEVEL}:v3" \
     "/opt/spack-pdi/tests/spack_install_pdi"
