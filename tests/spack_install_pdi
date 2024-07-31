@@ -3,23 +3,17 @@ set -e
 
 
 echo -e "\n\n******* Adding required spack repositories *******\n"
-rm -rf ${SPACK_ROOT}/var/spack/repos/fti || true
-git clone --depth 1 https://github.com/leobago/fti-spack ${SPACK_ROOT}/var/spack/repos/fti
-spack repo add ${SPACK_ROOT}/var/spack/repos/fti || true
-
-rm -rf ${SPACK_ROOT}/var/spack/repos/pdi || true
-cp -a /opt/spack-pdi ${SPACK_ROOT}/var/spack/repos/pdi
-spack repo add ${SPACK_ROOT}/var/spack/repos/pdi || true
-
+if [ ! -e ${SPACK_ROOT}/var/spack/repos/pdi ]
+then
+    cp -a /opt/spack-pdi ${SPACK_ROOT}/var/spack/repos/pdi
+    spack repo add ${SPACK_ROOT}/var/spack/repos/pdi || true
+fi
 
 echo -e "\n\n******* Solve *******\n"
 spack solve -I --reuse \
     pdi@develop \
     pdiplugin-decl-hdf5@develop \
     pdiplugin-decl-netcdf@develop \
-    pdiplugin-decl-sion@develop \
-    pdiplugin-flowvr@develop \
-    pdiplugin-fti@develop^fti~fortran~hdf5 \
     pdiplugin-mpi@develop \
     pdiplugin-pycall@develop \
     pdiplugin-serialize@develop \
@@ -33,9 +27,6 @@ spack install --fail-fast --show-log-on-error --reuse \
     pdi@develop \
     pdiplugin-decl-hdf5@develop \
     pdiplugin-decl-netcdf@develop \
-    pdiplugin-decl-sion@develop \
-    pdiplugin-flowvr@develop \
-    pdiplugin-fti@develop^fti~fortran~hdf5 \
     pdiplugin-mpi@develop \
     pdiplugin-pycall@develop \
     pdiplugin-serialize@develop \
