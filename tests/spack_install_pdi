@@ -3,11 +3,11 @@ set -e
 
 
 echo -e "\n\n******* Adding required spack repositories *******\n"
-if [ ! -e ${SPACK_ROOT}/var/spack/repos/pdi ]
+if [ -e ${SPACK_ROOT}/var/spack/repos/pdi ]
 then
-    cp -a /opt/spack-pdi ${SPACK_ROOT}/var/spack/repos/pdi
-    spack repo add ${SPACK_ROOT}/var/spack/repos/pdi || true
+    spack repo rm ${SPACK_ROOT}/var/spack/repos/pdi || true
 fi
+spack repo add "$(dirname "$(dirname "$0")")"
 
 echo -e "\n\n******* Solve *******\n"
 spack solve -I --reuse \
@@ -19,7 +19,8 @@ spack solve -I --reuse \
     pdiplugin-serialize@develop \
     pdiplugin-set-value@develop \
     pdiplugin-trace@develop \
-    pdiplugin-user-code@develop
+    pdiplugin-user-code@develop \
+    zpp
 
 
 echo -e "\n\n******* Installation *******\n"
@@ -32,4 +33,5 @@ spack install --fail-fast --show-log-on-error --reuse \
     pdiplugin-serialize@develop \
     pdiplugin-set-value@develop \
     pdiplugin-trace@develop \
-    pdiplugin-user-code@develop
+    pdiplugin-user-code@develop \
+    zpp

@@ -9,13 +9,12 @@ from spack import *
 class PdipluginMpi(CMakePackage):
     """MPI plugin for the PDI library"""
 
-    homepage = "https://pdi.julien-bigot.fr/"
-    url = "https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/1.6.0/pdi-1.6.0.tar.bz2"
-    git = "https://gitlab.maisondelasimulation.fr/pdidev/pdi.git"
+    homepage = "https://pdi.dev"
+    git = "https://github.com/pdidev/pdi.git"
 
     maintainers = ['jbigot']
 
-    version('develop', branch='master', no_cache=True)
+    version('develop', branch='main', no_cache=True)
     version('1.7.1',   sha256='d67e3a498bfe4491c4e9aeb40015b32481a7902b122f087dcebf05451a3d9ce1')
     version('1.6.0',   sha256='ae45d388c98c5e33d552d5e3216c1f92bf97d5dd01c669107084c1f3202fcd5a')
     version('1.5.5',   sha256='11bf5db61f23107dfd2135e637e9233524855c78104c57288c6af21d02d1ea53')
@@ -40,9 +39,10 @@ class PdipluginMpi(CMakePackage):
 
     variant('tests', default=False, description='Build tests')
 
-    depends_on('cmake@3.10:', type=('build'), when='@1.5.0:')
+    depends_on('cmake@3.16.3:', type=('build'), when='@1.8:')
+    depends_on('cmake@3.10:', type=('build'), when='@1.5:')
     depends_on('cmake@3.5:',  type=('build'), when='@:1.4.3')
-    depends_on('mpi',         type=('build', 'link', 'run'))
+    depends_on('mpi', type=('build', 'link', 'run'))
     depends_on('pdi@develop', type=('link', 'run'), when='@develop')
     depends_on('pdi@1.7.1',   type=('link', 'run'), when='@1.7.1')
     depends_on('pdi@1.6.0',   type=('link', 'run'), when='@1.6.0')
@@ -68,6 +68,13 @@ class PdipluginMpi(CMakePackage):
     depends_on('pkgconfig',   type=('build'))
 
     root_cmakelists_dir = 'plugins/mpi'
+
+    def url_for_version(self, version):
+        fixed = ''
+        if version <= Version('1.7.1'):
+            return (f"https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/"
+                    + "{version}/pdi-{version}.tar.bz2")
+        return f"https://github.com/pdidev/pdi/archive/refs/tags/{version}.tar.gz"
 
     def cmake_args(self):
         args = [

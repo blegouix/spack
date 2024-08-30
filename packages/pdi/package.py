@@ -14,13 +14,12 @@ class Pdi(CMakePackage):
     plugin system to make existing libraries such as HDF5, SIONlib or FTI
     available to codes, potentially mixed in a single execution."""
 
-    homepage = "https://pdi.julien-bigot.fr/"
-    url = "https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/1.6.0/pdi-1.6.0.tar.bz2"
-    git = "https://gitlab.maisondelasimulation.fr/pdidev/pdi.git"
+    homepage = "https://pdi.dev"
+    git = "https://github.com/pdidev/pdi.git"
 
     maintainers = ['jbigot']
 
-    version('develop', branch='master', no_cache=True)
+    version('develop', branch='main', no_cache=True)
     version('1.7.1',   sha256='d67e3a498bfe4491c4e9aeb40015b32481a7902b122f087dcebf05451a3d9ce1')
     version('1.6.0',   sha256='ae45d388c98c5e33d552d5e3216c1f92bf97d5dd01c669107084c1f3202fcd5a')
     version('1.5.5',   sha256='11bf5db61f23107dfd2135e637e9233524855c78104c57288c6af21d02d1ea53')
@@ -49,41 +48,47 @@ class Pdi(CMakePackage):
     variant('fortran', default=True,  description='Enable Fortran support')
     variant('python',  default=True,  description='Enable Python support')
 
-    depends_on('benchmark@1.5.0:', type=('link'), when='@1.5.0: +benchs')
+    depends_on('benchmark@1.5:', type=('link'), when='@1.5:1.7 +benchs')
     depends_on('cmake@3.5:', type=('build'))
     depends_on('cmake@3.10:', type=('build'), when='+docs')
     depends_on('cmake@3.10:', type=('build'), when='+tests')
-    depends_on('cmake@3.10:', type=('build'), when='@1.5.0:')
+    depends_on('cmake@3.10:', type=('build'), when='@1.5:')
+    depends_on('cmake@3.16.3:', type=('build'), when='@1.8:')
     depends_on('doxygen@1.8.12:', type=('build'), when='+docs')
-    depends_on('doxygen@1.8.13:', type=('build'), when='@:1.4.3 +docs')
+    depends_on('doxygen@1.8.13:', type=('build'), when='@1.4.3: +docs')
+    depends_on('doxygen@1.8.17:', type=('build'), when='@1.8: +docs')
     depends_on('fmt@6.1.2:', type=('link'), when='@1.5')
-    depends_on('googletest@1.8.0: +gmock', type=('link'), when='+tests')
-    depends_on('paraconf@1.0.0:', type=('link', 'run'), when='@1.6.0:')
-    depends_on('paraconf@0.4.16:', type=('link', 'run'), when='@1.5.0:')
+    depends_on('googletest@1.8: +gmock', type=('link'), when='@:1.7 +tests')
+    depends_on('paraconf@1:', type=('link', 'run'), when='@1.6:')
+    depends_on('paraconf@0.4.16:', type=('link', 'run'), when='@1.5:')
     depends_on('paraconf +fortran', type=('link', 'run'), when='+fortran')
     depends_on('paraconf@0.4.14: +shared', type=('link', 'run'))
     depends_on('pkgconfig', type=('build'))
     depends_on('python@3.6.5:', type=('build', 'link', 'run'), when='+python')
+    depends_on('python@3.8.2:', type=('build', 'link', 'run'), when='@1.8: +python')
     depends_on('py-pybind11@2.3:2', type=('link'), when='+python')
     depends_on('py-pybind11@:2.11', type=('link'), when='@:1.6 +python')
+    depends_on('py-pybind11@2.4.3:', type=('link'), when='@1.8: +python')
     depends_on('spdlog@1.3.1:1', type=('link', 'run'))
-    depends_on('spdlog@1.5.0:', type=('link'), when='@1.5.0:')
-    depends_on('zpp@1.0.8:', type=('build'), when='+fortran')
-    depends_on('zpp@1.0.15:', type=('build'), when='@1.5.0: +fortran')
+    depends_on('spdlog@1.5:', type=('link'), when='@1.5:')
+    depends_on('zpp@1.0.8:', type=('build'), when='@:1.7 +fortran')
+    depends_on('zpp@1.0.15:', type=('build'), when='@1.5:1.7 +fortran')
 
     root_cmakelists_dir = 'pdi'
 
+    def url_for_version(self, version):
+        fixed = ''
+        if version <= Version('1.7.1'):
+            return (f"https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/"
+                    + "{version}/pdi-{version}.tar.bz2")
+        return f"https://github.com/pdidev/pdi/archive/refs/tags/{version}.tar.gz"
+
     def cmake_args(self):
         args = [
-            '-DBUILD_BENCHMARKING:BOOL={:s}'.format(
-                'ON' if '+benchs' in self.spec else 'OFF'),
-            '-DBUILD_DOCUMENTATION:BOOL={:s}'.format(
-                'ON' if '+docs' in self.spec else 'OFF'),
-            '-DBUILD_FORTRAN:BOOL={:s}'.format(
-                'ON' if '+fortran' in self.spec else 'OFF'),
-            '-DBUILD_PYTHON:BOOL={:s}'.format(
-                'ON' if '+python' in self.spec else 'OFF'),
-            '-DBUILD_TESTING:BOOL={:s}'.format(
-                'ON' if '+tests' in self.spec else 'OFF'),
+            self.define_from_variant('BUILD_BENCHMARKING', 'benchs'),
+            self.define_from_variant('BUILD_DOCUMENTATION', 'docs'),
+            self.define_from_variant('BUILD_FORTRAN', 'fortran'),
+            self.define_from_variant('BUILD_PYTHON', 'python'),
+            self.define_from_variant('BUILD_TESTING', 'tests'),
         ]
         return args

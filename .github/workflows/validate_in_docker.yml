@@ -1,5 +1,6 @@
 name: "validate in docker"
 on:
+  schedule: [ { cron: "50 21 * * 0" } ] # run every Sunday 21h50
   pull_request:
   push:
     branches: [ stable  ]
@@ -12,7 +13,7 @@ jobs:
         version:  ['latest', 'oldest']
         compiler: ['gcc', 'clang']
         mpi:      ['openmpi','mpich']
-        level:    ['mini', 'all']
+        variant:  ['mini', 'all']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,5 +22,5 @@ jobs:
           VERSION: ${{ matrix.version }}
           COMPILER: ${{ matrix.compiler }}
           MPI: ${{ matrix.mpi }}
-          LEVEL: ${{ matrix.level }}
+          VARIANT: ${{ matrix.variant }}
         run: ./tests/test_install_in_docker

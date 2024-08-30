@@ -10,18 +10,18 @@ COMPILER="${COMPILER:-gcc}"
 # MPI implementation if not specified
 MPI="${MPI:-openmpi}"
 # libraries included if not specified
-LEVEL="${LEVEL:-all}"
+VARIANT="${LEVEL:-all}"
 
 echo "  ** You can set the following environment variables:"
 echo "VERSION(oldest|latest)=${VERSION}"
 echo "COMPILER(gcc|clang)=${COMPILER}"
 echo "MPI(openmpi|mpich)=${MPI}"
-echo "LEVEL(mini|all)=${LEVEL}"
+echo "VARIANT(mini|all)=${VARIANT}"
 
 set -ex
 
 docker run --rm \
     -v "${PWD}:/opt/spack-pdi:ro" \
     --entrypoint spack-env \
-    "ghcr.io/pdidev/fullspack/${VERSION}/${COMPILER}/${MPI}/${LEVEL}:v3" \
+    "ghcr.io/pdidev/fullspack/${VERSION}/${COMPILER}/${MPI}/${VARIANT}:v3" \
     "/opt/spack-pdi/tests/spack_install_pdi"

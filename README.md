@@ -1,13 +1,7 @@
 # PDI spack repository
 
-This is a [spack](https://spack.io/) repository with recipes for:
-[DDC](https://github.com/Maison-de-la-Simulation/ddc),
-Deisa,
-[Gysela](https://gyselax.github.io/),
-[layout-contiguous](https://github.com/Maison-de-la-Simulation/layout-contiguous),
-[PDI](https://pdi.dev) and its plugins.
-
-Each of thiese can be installed in a few simple steps:
+This is a [spack](https://spack.io/) repository with recipes for [PDI](https://pdi.dev) and its plugins.
+It can be installed in a few simple steps:
 1. [setup spack](#step-1-setup),
 2. [(optional): reuse already installed packages](#step-2-optional-reuse-already-installed-packages),
 3. [(optional): setup a non-default compiler](#step-3-optional-setup-a-non-default-compiler),
@@ -103,91 +97,10 @@ spack unload gcc@9.2.0
 
 ## Step #4: Installation
 
-For most packages, the installation is as simple as:
-```sh
-# Install <packagename>
-spack install <packagename>
-```
-
-So for example, for ddc: `spack install ddc` and for deisa: `spack install deisa`.
-
-A few package do however have slightly more complex installation instructions:
-* [install Gysela](#gysela),
-* [install PDI and most of its plugins](#pdi-and-most-of-its-plugins),
-  - [install PDI FTI plugin](#pdi-fti-plugin).
-
-
-### Gysela
-
-#### Gysela Options
-
-Before installing Gysela, you choose select the set of options that suit you by adding elements to your spec:
-* `build_type=X` to specify build type, valid values are `'Release', 'Timed', 'Deterministic', 'Debug' and 'Scorep'` (defaults to `Release`),
-* `+pdi` for compilation with PDI for IOs (defaults to `off`),
-* `gysela_dir=/path/to/put/gysela` to choose where to install Gysela (defaults to `$HOME/gysela`).
-This information is also available by doing `spack info gysela`. 
-
-Gysela sometimes has issues when lapack is provided by open-blas.
-It is thus recommended to add `^intel-mkl` (or `^netlib-lapack`) when calling spack install.
-
-To check what you will actually install, you can run:
-```sh
-# Get info about what you will install with Gysela
-spack solve gysela ${SPEC_ELEMENTS}
-```
-
-#### Gysela Installation proper
-
-**Warning:** 
-Since Gysela is not publicly available for download, you will need a ssh key properly installed to download it.
-
-You can install Gysela using the following instructions after you've [done the setup](#setup):
-```sh
-# Install Gysela
-spack install gysela ${SPEC_ELEMENTS}
-```
-
-
-**For example on [Ruche](https://mesocentre.pages.centralesupelec.fr/user_doc/ruche/09_softwares/)**, you can do:
-```sh
-# Install Gysela
-export GYSELA_INSTALLDIR="${HOME}/gysela_spack"
-spack install --reuse gysela %gcc@9.2.0 +pdi "gysela_dir=${GYSELA_INSTALLDIR}" "^intel-mkl"
-```
-
-#### Execution of spack-installed Gysela
-
-To actually run Gysela you need to move to the installation directory selected in the previous section and load the module.
-
-```sh
-# move to the installation directory
-cd "${GYSELA_INSTALLDIR}/wk"
-# load the appropriate spack modules
-spack load gysela
-# now you can run
-./subgys
-```
-
-
-### PDI and most of its plugins
-
 You can install PDI and most of its plugins using the following instructions after you've [done the setup](#setup):
 ```sh
 # Install PDI and most of its plugins
-spack install pdiplugin-decl-hdf5 pdiplugin-decl-netcdf pdiplugin-decl-sion pdiplugin-flowvr pdiplugin-mpi pdiplugin-pycall pdiplugin-serialize pdiplugin-set-value pdiplugin-trace pdiplugin-user-code
+spack install pdiplugin-decl-hdf5 pdiplugin-decl-netcdf pdiplugin-mpi pdiplugin-pycall pdiplugin-serialize pdiplugin-set-value pdiplugin-trace pdiplugin-user-code
 ```
 
 If you only need some of the plugins, you can adapt the last line.
-
-
-#### PDI FTI plugin
-
-PDI FTI plugin depends on the [FTI recipe](https://github.com/leobago/fti-spack).
-To install it, you need to use the following instructions after you've [done the setup](#setup):
-```sh
-# 1. Get FTI spack repo
-git clone https://github.com/leobago/fti-spack spack/var/spack/repos/FTI
-spack repo add spack/var/spack/repos/FTI
-# 2. Install fti plugin
-spack install pdiplugin-fti
-```

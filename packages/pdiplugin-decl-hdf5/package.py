@@ -12,13 +12,12 @@ class PdipluginDeclHdf5(CMakePackage):
     offers a simple declarative interface to access a large subset of it for the
     PDI library"""
 
-    homepage = "https://pdi.julien-bigot.fr/"
-    url = "https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/1.6.0/pdi-1.6.0.tar.bz2"
-    git = "https://gitlab.maisondelasimulation.fr/pdidev/pdi.git"
+    homepage = "https://pdi.dev"
+    git = "https://github.com/pdidev/pdi.git"
 
     maintainers = ['jbigot']
 
-    version('develop', branch='master', no_cache=True)
+    version('develop', branch='main', no_cache=True)
     version('1.7.1',   sha256='d67e3a498bfe4491c4e9aeb40015b32481a7902b122f087dcebf05451a3d9ce1')
     version('1.6.0',   sha256='ae45d388c98c5e33d552d5e3216c1f92bf97d5dd01c669107084c1f3202fcd5a')
     version('1.5.5',   sha256='11bf5db61f23107dfd2135e637e9233524855c78104c57288c6af21d02d1ea53')
@@ -46,15 +45,17 @@ class PdipluginDeclHdf5(CMakePackage):
     variant('tests',   default=False, description='Build tests')
     variant('mpi',     default=True,  description='Enable parallel HDF5')
 
-    depends_on('benchmark@1.5.0:', type=('link'), when='@1.5.0: +benchs')
-    depends_on('cmake@3.10:', type=('build'), when='@1.5.0:')
+    depends_on('benchmark@1.5:1', type=('link'), when='@1.5:1.7 +benchs')
+    depends_on('cmake@3.16.3:', type=('build'), when='@1.8:')
+    depends_on('cmake@3.10:', type=('build'), when='@1.5:')
     depends_on('cmake@3.10:', type=('build'), when='+tests')
     depends_on('cmake@3.5:',  type=('build'), when='@:1.4.3')
     depends_on('fmt@6.1.2:', type=('link'), when='@1.5')
-    depends_on('googletest@1.8.0: +gmock', type=('link'), when='@1.3: +tests')
-    depends_on('hdf5@1.10.0:', type=('build', 'link', 'run'), when='@1.5.0:')
+    depends_on('googletest@1.8: +gmock', type=('link'), when='@1.3:1.7 +tests')
+    depends_on('hdf5@1.10.4:', type=('build', 'link', 'run'), when='@1.8:')
+    depends_on('hdf5@1.10:', type=('build', 'link', 'run'), when='@1.5:')
     depends_on('hdf5 +mpi', type=('build', 'link', 'run'), when='+mpi')
-    depends_on('hdf5@1.8.0:1 +shared', type=('build', 'link', 'run'))
+    depends_on('hdf5@1.8:1 +shared', type=('build', 'link', 'run'))
     depends_on('pdi@develop', type=('link', 'run'), when='@develop')
     depends_on('pdi@1.7.1',   type=('link', 'run'), when='@1.7.1')
     depends_on('pdi@1.6.0',   type=('link', 'run'), when='@1.6.0')
@@ -80,6 +81,13 @@ class PdipluginDeclHdf5(CMakePackage):
     depends_on('pkgconfig', type=('build'))
 
     root_cmakelists_dir = 'plugins/decl_hdf5'
+
+    def url_for_version(self, version):
+        fixed = ''
+        if version <= Version('1.7.1'):
+            return (f"https://gitlab.maisondelasimulation.fr/pdidev/pdi/-/archive/"
+                    + "{version}/pdi-{version}.tar.bz2")
+        return f"https://github.com/pdidev/pdi/archive/refs/tags/{version}.tar.gz"
 
     def cmake_args(self):
         args = [
