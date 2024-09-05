@@ -13,14 +13,12 @@ jobs:
         version:  ['latest', 'oldest']
         compiler: ['gcc', 'clang']
         mpi:      ['openmpi','mpich']
-        variant:  ['mini', 'all']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build
         env:
           VERSION: ${{ matrix.version }}
           COMPILER: ${{ matrix.compiler }}
           MPI: ${{ matrix.mpi }}
-          VARIANT: ${{ matrix.variant }}
         run: ./tests/test_install_in_docker

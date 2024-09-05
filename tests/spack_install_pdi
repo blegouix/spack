@@ -5,7 +5,7 @@ set -e
 echo -e "\n\n******* Adding required spack repositories *******\n"
 if [ -e ${SPACK_ROOT}/var/spack/repos/pdi ]
 then
-    spack repo rm ${SPACK_ROOT}/var/spack/repos/pdi || true
+    spack repo rm ${SPACK_ROOT}/var/spack/repos/pdi &>/dev/null || true
 fi
 spack repo add "$(dirname "$(dirname "$0")")"
 

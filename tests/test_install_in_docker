@@ -10,7 +10,7 @@ COMPILER="${COMPILER:-gcc}"
 # MPI implementation if not specified
 MPI="${MPI:-openmpi}"
 # libraries included if not specified
-VARIANT="${LEVEL:-all}"
+VARIANT="${VARIANT:-all}"
 
 echo "  ** You can set the following environment variables:"
 echo "VERSION(oldest|latest)=${VERSION}"
