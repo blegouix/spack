@@ -18,6 +18,7 @@ class PdipluginDeclHdf5(CMakePackage):
     maintainers = ['jbigot']
 
     version('develop', branch='main', no_cache=True)
+    version('1.8.0',   sha256='5d353bfa64f45ee4715b88bd30330030f79f2020cd6bede0ad9b8f9beddadea9')
     version('1.7.1',   sha256='d67e3a498bfe4491c4e9aeb40015b32481a7902b122f087dcebf05451a3d9ce1')
     version('1.6.0',   sha256='ae45d388c98c5e33d552d5e3216c1f92bf97d5dd01c669107084c1f3202fcd5a')
     version('1.5.5',   sha256='11bf5db61f23107dfd2135e637e9233524855c78104c57288c6af21d02d1ea53')
@@ -57,6 +58,7 @@ class PdipluginDeclHdf5(CMakePackage):
     depends_on('hdf5 +mpi', type=('build', 'link', 'run'), when='+mpi')
     depends_on('hdf5@1.8:1 +shared', type=('build', 'link', 'run'))
     depends_on('pdi@develop', type=('link', 'run'), when='@develop')
+    depends_on('pdi@1.8.0',   type=('link', 'run'), when='@1.8.0')
     depends_on('pdi@1.7.1',   type=('link', 'run'), when='@1.7.1')
     depends_on('pdi@1.6.0',   type=('link', 'run'), when='@1.6.0')
     depends_on('pdi@1.5.5',   type=('link', 'run'), when='@1.5.5')
